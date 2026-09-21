@@ -6,14 +6,14 @@ package komunikacija;
 
 import domen.Kupac;
 import domen.Mesto;
+import domen.Oprema;
 import domen.Prodavac;
+import domen.Racun;
+import domen.StrSprema;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -77,9 +77,9 @@ public class Komunikacija {
             System.out.println("Uspeh");
         } else {
             System.out.println("Greska");
-            ((Exception)odg.getOdgovor()).printStackTrace();
-            throw new Exception("Greska");
-            //JOptionPane.showMessageDialog(pkf, "Sistem ne može da obriše kupca", "Greška", JOptionPane.ERROR_MESSAGE);
+            Exception serverGreska = (Exception) odg.getOdgovor();
+            serverGreska.printStackTrace();
+            throw new Exception(serverGreska.getMessage());
         }
     }
 
@@ -92,19 +92,65 @@ public class Komunikacija {
         return listaMesta;
     }
 
-    public void ubaciKupca(Kupac k) {
+    public void ubaciKupca(Kupac k) throws Exception {
         Zahtev zahtev = new Zahtev(Operacija.UBACI_KUPCA, k);
         posiljalac.posalji(zahtev);
-        
+
         Odgovor odg = (Odgovor) primalac.primi();
+        if (odg.getOdgovor() != null) {
+            Exception serverGreska = (Exception) odg.getOdgovor();
+            serverGreska.printStackTrace();
+            throw new Exception(serverGreska.getMessage());
+        }
     }
 
-    public void promeniKupca(Kupac k) {
+    public void promeniKupca(Kupac k) throws Exception {
         Zahtev zahtev = new Zahtev(Operacija.PROMENI_KUPCA, k);
         posiljalac.posalji(zahtev);
-        
+
         Odgovor odg = (Odgovor) primalac.primi();
+        if (odg.getOdgovor() != null) {
+            Exception serverGreska = (Exception) odg.getOdgovor();
+            serverGreska.printStackTrace();
+            throw new Exception(serverGreska.getMessage());
+        }
     }
 
+    public void ubaciStrucnuSpremu(StrSprema ss) throws Exception {
+        Zahtev zahtev = new Zahtev(Operacija.UBACI_STRSPREMA, ss);
+        posiljalac.posalji(zahtev);
+
+        Odgovor odg = (Odgovor) primalac.primi();
+        if (odg.getOdgovor() != null) {
+            throw new Exception("Greska");
+        }
+    }
     
+    public List<Prodavac> vratiProdavce() {
+        Zahtev zahtev = new Zahtev(Operacija.UCITAJ_PRODAVCE, null);
+        posiljalac.posalji(zahtev);
+
+        Odgovor odg = (Odgovor) primalac.primi();
+        List<Prodavac> listaProdavaca = (List<Prodavac>) odg.getOdgovor();
+        return listaProdavaca;
+    }
+
+    public List<Oprema> vratiOpremu() {
+        Zahtev zahtev = new Zahtev(Operacija.UCITAJ_OPREMU, null);
+        posiljalac.posalji(zahtev);
+
+        Odgovor odg = (Odgovor) primalac.primi();
+        List<Oprema> listaOpreme = (List<Oprema>) odg.getOdgovor();
+        return listaOpreme;
+    }
+    
+    public void kreirajRacun(Racun r) throws Exception {
+        Zahtev zahtev = new Zahtev(Operacija.KREIRAJ_RACUN, r);
+        posiljalac.posalji(zahtev);
+
+        Odgovor odg = (Odgovor) primalac.primi();
+        if (odg.getOdgovor() != null) {
+            throw new Exception("Greska");
+        }
+    }
 }

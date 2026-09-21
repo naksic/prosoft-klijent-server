@@ -107,7 +107,7 @@ public class Mesto implements ApstraktniDomenskiObjekat {
 
     @Override
     public String vratiPrimarniKljuc() {
-        return "mesto.idMesto" + idMesto;
+        return "mesto.idMesto = " + idMesto;
     }
 
     @Override

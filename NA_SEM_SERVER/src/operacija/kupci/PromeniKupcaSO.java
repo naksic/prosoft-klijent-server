@@ -22,7 +22,11 @@ public class PromeniKupcaSO extends ApstraktnaGenerickaOperacija {
 
     @Override
     protected void izvrsiOperaciju(Object param, String kljuc) throws Exception {
-        broker.edit((Kupac)param);
+        try {
+            broker.edit((Kupac) param);
+        } catch (java.sql.SQLIntegrityConstraintViolationException e) {
+            throw new Exception("Sistem ne može da zapamti kupca. Razlog: broj loyalty kartice već postoji.");
+        }
     }
     
 }

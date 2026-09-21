@@ -19,6 +19,7 @@ public class FormaKonfigBaza extends javax.swing.JDialog {
     public FormaKonfigBaza(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        setLocationRelativeTo(parent);
         jTextFieldURL.setText(Konfiguracija.getInstance().getProperty("url"));
         jTextFieldUsername.setText(Konfiguracija.getInstance().getProperty("username"));
         jPasswordFieldPassword.setText(Konfiguracija.getInstance().getProperty("password"));
@@ -49,7 +50,7 @@ public class FormaKonfigBaza extends javax.swing.JDialog {
 
         jLabel3.setText("PASSWORD");
 
-        jButtonSacuvaj.setText("Sacuvaj");
+        jButtonSacuvaj.setText("Sačuvaj");
         jButtonSacuvaj.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSacuvajActionPerformed(evt);
@@ -103,6 +104,11 @@ public class FormaKonfigBaza extends javax.swing.JDialog {
         String url = jTextFieldURL.getText().trim();
         String username = jTextFieldUsername.getText().trim();
         String password = String.valueOf(jPasswordFieldPassword.getPassword());
+        
+        if(username.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Morate uneti username.", "Greška", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         
         try {
             Konfiguracija.getInstance().setProperty("url", url);

@@ -57,17 +57,20 @@ public class PrikazKupacaController {
             public void actionPerformed(ActionEvent e) {
                 int red = pkf.getjTableKupci().getSelectedRow();
                 if(red == -1) {
-                    JOptionPane.showMessageDialog(pkf, "Greška, sistem ne može da obriše kupca", "Greska", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(pkf, "Sistem ne može da nađe kupca", "Greška", JOptionPane.ERROR_MESSAGE);
                 } else {
                     ModelTabeleKupac mtk = (ModelTabeleKupac) pkf.getjTableKupci().getModel();
                     Kupac k = mtk.getLista().get(red);
                     try {
                         Komunikacija.getInstance().obrisiKupca(k);
-                        JOptionPane.showMessageDialog(pkf, "Sistem je obrisao kupca.", "Uspešno", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(pkf, "Sistem je obrisao kupca.", "Uspeh", JOptionPane.INFORMATION_MESSAGE);
                         pripremiFormu();
                     } catch(Exception ex) {
-                        JOptionPane.showMessageDialog(pkf, "Greška, sistem ne može da obriše kupca", "Greska", JOptionPane.ERROR_MESSAGE);
-                    }
+                        String poruka = ex.getMessage();
+                        if (poruka == null || poruka.isEmpty()) {
+                            poruka = "Sistem ne može da obriše kupca.";
+                        }
+                        JOptionPane.showMessageDialog(pkf, poruka, "Greška", JOptionPane.ERROR_MESSAGE);                    }
                 }
             }
         });
@@ -78,13 +81,13 @@ public class PrikazKupacaController {
                 if(red != -1) {
                     ModelTabeleKupac mtk = (ModelTabeleKupac) pkf.getjTableKupci().getModel();
                     Kupac k = mtk.getLista().get(red);
-                    JOptionPane.showMessageDialog(pkf, "Sistem je nasao kupca!", "Uspeh", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(pkf, "Sistem je našao kupca.", "Uspeh", JOptionPane.INFORMATION_MESSAGE);
                     
                     Kordinator.getInstance().dodajParam("kupac", k);
                     Kordinator.getInstance().otvoriPromeniKupcaFormu();
                             
                 } else {
-                    JOptionPane.showMessageDialog(pkf, "Sistem ne može da nađe kupca", "Greška", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(pkf, "Sistem ne može da nađe kupca.", "Greška", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });

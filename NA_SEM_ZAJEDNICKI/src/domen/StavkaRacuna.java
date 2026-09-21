@@ -23,7 +23,8 @@ public class StavkaRacuna implements ApstraktniDomenskiObjekat{
     public StavkaRacuna() {
     }
 
-    public StavkaRacuna(int rb, int kolicina, double cena, double iznos, Oprema oprema) {
+    public StavkaRacuna(Racun racun, int rb, int kolicina, double cena, double iznos, Oprema oprema) {
+        this.racun = racun;
         this.rb = rb;
         this.kolicina = kolicina;
         this.cena = cena;
@@ -31,6 +32,14 @@ public class StavkaRacuna implements ApstraktniDomenskiObjekat{
         this.oprema = oprema;
     }
 
+    public Racun getRacun() {
+        return racun;
+    }
+
+    public void setRacun(Racun racun) {
+        this.racun = racun;
+    }
+    
     public int getRb() {
         return rb;
     }

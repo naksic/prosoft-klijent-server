@@ -1,0 +1,5 @@
+#Mon Aug 24 10:27:05 CEST 2026
+password=OVDE_UPISI_LOZINKU
+port=9000
+url=jdbc\:mysql\://localhost\:3306/0_sportska_oprema
+username=admin

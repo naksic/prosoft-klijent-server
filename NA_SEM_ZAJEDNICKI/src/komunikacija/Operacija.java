@@ -17,5 +17,8 @@ public enum Operacija implements Serializable {
     UCITAJ_MESTA,
     UBACI_KUPCA,
     PROMENI_KUPCA,
-    
+    UBACI_STRSPREMA,
+    UCITAJ_PRODAVCE,
+    UCITAJ_OPREMU,
+    KREIRAJ_RACUN
 }

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -168,7 +169,8 @@ public class Racun implements ApstraktniDomenskiObjekat {
 
     @Override
     public String vratiVrednostZaUbacivanje() {
-        return "'" + datumIzdavanja + "','" + nacinPlacanja + "','" + napomena + "'," + popust + "," + ukupanIznos + "," + prodavac.getIdProdavac()+ "," + kupac.getIdKupca();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return "'" + sdf.format(datumIzdavanja) + "','" + nacinPlacanja + "','" + napomena + "'," + popust + "," + ukupanIznos + "," + prodavac.getIdProdavac()+ "," + kupac.getIdKupca();
     }
 
     @Override

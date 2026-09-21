@@ -6,6 +6,8 @@ package kordinator;
 
 import domen.Prodavac;
 import forme.DodajKupcaForma;
+import forme.DodajRacunForma;
+import forme.DodajStrSpremuForma;
 import forme.FormaTip;
 import forme.GlavnaForma;
 import forme.LoginForma;
@@ -13,6 +15,8 @@ import forme.PrikazKupacaForma;
 import java.util.HashMap;
 import java.util.Map;
 import kontroleri.DodajKupcaController;
+import kontroleri.DodajRacunController;
+import kontroleri.DodajStrSpremuController;
 import kontroleri.GlavnaFormaController;
 import kontroleri.LoginController;
 import kontroleri.PrikazKupacaController;
@@ -30,6 +34,8 @@ public class Kordinator {
     private GlavnaFormaController glavnaFormaController;
     private PrikazKupacaController prikazKupacaController;
     private DodajKupcaController dodajKupcaController;
+    private DodajStrSpremuController dodajStrSpremuController;
+    private DodajRacunController dodajRacunController;
     private Map<String, Object> parametri;
     
     private Kordinator() {
@@ -87,5 +93,13 @@ public class Kordinator {
         prikazKupacaController.osveziFormu();
     }
 
+    public void otvoriDodajStrSpremuFormu() {
+        dodajStrSpremuController = new DodajStrSpremuController(new DodajStrSpremuForma());
+        dodajStrSpremuController.otvoriFormu();
+    }
     
+    public void otvoriDodajRacunFormu() {
+        dodajRacunController = new DodajRacunController(new DodajRacunForma());
+        dodajRacunController.otvoriFormu();
+    }
 }

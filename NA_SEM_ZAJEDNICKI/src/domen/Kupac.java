@@ -6,6 +6,7 @@ package domen;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,21 +20,22 @@ public class Kupac implements ApstraktniDomenskiObjekat {
     private String prezime;
     private String brojLoyaltyKartice;
     private String kontakt;
+    private Date datumRodjenja;
     private int starost;
     private Mesto mesto;
 
     public Kupac() {
     }
 
-    public Kupac(int idKupca, String ime, String prezime, String brojLoyaltyKartice, String kontakt, int starost, Mesto mesto) {
+    public Kupac(int idKupca, String ime, String prezime, String brojLoyaltyKartice, String kontakt, java.util.Date datumRodjenja, Mesto mesto) {
         this.idKupca = idKupca;
         this.ime = ime;
         this.prezime = prezime;
         this.brojLoyaltyKartice = brojLoyaltyKartice;
         this.kontakt = kontakt;
-        this.starost = starost;
         this.mesto = mesto;
-    }
+        setDatumRodjenja(datumRodjenja);
+}
 
     public int getIdKupca() {
         return idKupca;
@@ -90,6 +92,24 @@ public class Kupac implements ApstraktniDomenskiObjekat {
     public void setMesto(Mesto mesto) {
         this.mesto = mesto;
     }
+    
+    public java.util.Date getDatumRodjenja() {
+        return datumRodjenja;
+    }
+
+    public void setDatumRodjenja(java.util.Date datumRodjenja) {
+        this.datumRodjenja = datumRodjenja;
+        this.starost = izracunajStarost(datumRodjenja);
+    }
+
+    private int izracunajStarost(java.util.Date datumRodjenja) {
+        if (datumRodjenja == null) {
+            return 0;
+        }
+        java.time.LocalDate danas = java.time.LocalDate.now();
+        java.time.LocalDate rodjendan = new java.sql.Date(datumRodjenja.getTime()).toLocalDate();
+        return java.time.Period.between(rodjendan, danas).getYears();
+}
 
     @Override
     public int hashCode() {
@@ -139,14 +159,14 @@ public class Kupac implements ApstraktniDomenskiObjekat {
             String prezime = rs.getString("kupac.prezime");
             String brojLK = rs.getString("kupac.brojLoyaltyKartice");
             String kontakt = rs.getString("kupac.kontakt");
-            int starost = rs.getInt("kupac.starost");
-            
+            java.sql.Date datumRodjenja = rs.getDate("kupac.datumRodjenja");
+
             int idMesto = rs.getInt("mesto.idMesto");
             String nazivMesta= rs.getString("mesto.naziv");
             int ptt = rs.getInt("mesto.postanskiBroj"); 
             Mesto mesto = new Mesto(idMesto, nazivMesta, ptt);
-            
-            Kupac k = new Kupac(idKupca, ime, prezime, brojLK, kontakt, starost, mesto);
+
+            Kupac k = new Kupac(idKupca, ime, prezime, brojLK, kontakt, datumRodjenja, mesto);
             lista.add(k);
         }
         return lista;
@@ -154,12 +174,13 @@ public class Kupac implements ApstraktniDomenskiObjekat {
 
     @Override
     public String vratiKoloneZaUbacivanje() {
-        return "ime,prezime,brojLoyaltyKartice,kontakt,starost,mesto";
+        return "ime,prezime,brojLoyaltyKartice,kontakt,starost,datumRodjenja,mesto";
     }
 
     @Override
     public String vratiVrednostZaUbacivanje() {
-        return "'" + ime + "','" + prezime + "','" + brojLoyaltyKartice + "','" + kontakt + "'," + starost + "," + mesto.getIdMesto();
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+        return "'" + ime + "','" + prezime + "'," + brojLoyaltyKarticeZaUpit() + ",'" + kontakt + "'," + starost + ",'" + sdf.format(datumRodjenja) + "'," + mesto.getIdMesto();
     }
 
     @Override
@@ -174,6 +195,14 @@ public class Kupac implements ApstraktniDomenskiObjekat {
 
     @Override
     public String vratiVrednostZaIzmenu() {
-        return "ime = '" + ime + "', prezime = '" + prezime + "', brojLoyaltyKartice = '" + brojLoyaltyKartice + "', kontakt = '" + kontakt + "', starost = " + starost + ", mesto = " + mesto.getIdMesto();
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+        return "ime = '" + ime + "', prezime = '" + prezime + "', brojLoyaltyKartice = " + brojLoyaltyKarticeZaUpit() + ", kontakt = '" + kontakt + "', starost = " + starost + ", datumRodjenja = '" + sdf.format(datumRodjenja) + "', mesto = " + mesto.getIdMesto();
+    }
+    
+    private String brojLoyaltyKarticeZaUpit() {
+        if (brojLoyaltyKartice == null || brojLoyaltyKartice.trim().isEmpty()) {
+            return "NULL";
+        }
+        return "'" + brojLoyaltyKartice + "'";
     }
 }

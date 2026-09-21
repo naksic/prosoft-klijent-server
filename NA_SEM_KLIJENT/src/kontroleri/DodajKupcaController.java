@@ -35,21 +35,40 @@ public class DodajKupcaController {
                 String prezime = dkf.getjTextFieldPrezime().getText().trim();
                 String brojLK = dkf.getjTextFieldBrojLK().getText().trim();
                 String kontakt = dkf.getjTextFieldKontakt().getText().trim();
-                int starost = Integer.parseInt(dkf.getjTextFieldStarost().getText().trim());
+                String datumRodjenjaText = dkf.getjTextFieldStarost().getText().trim();
                 Mesto m = (Mesto) dkf.getjComboBoxMesto().getSelectedItem();
-                
-                if (ime.isEmpty() || prezime.isEmpty() || brojLK.isEmpty() || kontakt.isEmpty() || starost == 0 || m == null) {
-                    JOptionPane.showMessageDialog(dkf,"Sistem ne može da zapamti kupca","Greška",JOptionPane.ERROR_MESSAGE );
+
+                if (ime.isEmpty() || prezime.isEmpty() || kontakt.isEmpty() || datumRodjenjaText.isEmpty() || m == null) {
+                    JOptionPane.showMessageDialog(dkf, "Sistem ne može da zapamti kupca", "Greška", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                
-                Kupac k = new Kupac(-1, ime, prezime, brojLK, kontakt, starost, m);
+
+                java.util.Date datumRodjenja;
+                try {
+                    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd.MM.yyyy");
+                    sdf.setLenient(false);
+                    datumRodjenja = sdf.parse(datumRodjenjaText);
+                } catch (java.text.ParseException exc) {
+                    JOptionPane.showMessageDialog(dkf, "Datum rođenja mora biti u formatu dd.MM.yyyy.", "Greška", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (datumRodjenja.after(new java.util.Date())) {
+                    JOptionPane.showMessageDialog(dkf, "Datum rođenja ne može biti u budućnosti.", "Greška", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                Kupac k = new Kupac(-1, ime, prezime, brojLK, kontakt, datumRodjenja, m);
                 try {
                     Komunikacija.getInstance().ubaciKupca(k);
-                    JOptionPane.showMessageDialog(dkf, "Sistem je zapamtio kupca", "Uspeh", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(dkf, "Sistem je zapamtio kupca.", "Uspeh", JOptionPane.INFORMATION_MESSAGE);
                     dkf.dispose();
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(dkf, "Sistem ne može da zapamti kupca", "Greška", JOptionPane.ERROR_MESSAGE);
+                    String poruka = ex.getMessage();
+                    if (poruka == null || poruka.isEmpty()) {
+                        poruka = "Sistem ne može da zapamti kupca.";
+                    }
+                    JOptionPane.showMessageDialog(dkf, poruka, "Greška", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -61,22 +80,41 @@ public class DodajKupcaController {
                 String prezime = dkf.getjTextFieldPrezime().getText().trim();
                 String brojLK = dkf.getjTextFieldBrojLK().getText().trim();
                 String kontakt = dkf.getjTextFieldKontakt().getText().trim();
-                int starost = Integer.parseInt(dkf.getjTextFieldStarost().getText().trim());
+                String datumRodjenjaText = dkf.getjTextFieldStarost().getText().trim();
                 Mesto m = (Mesto) dkf.getjComboBoxMesto().getSelectedItem();
-                
-                if (ime.isEmpty() || prezime.isEmpty() || brojLK.isEmpty() || kontakt.isEmpty() || starost == 0 || m == null) {
-                    JOptionPane.showMessageDialog(dkf,"Sistem ne može da zapamti kupca","Greška",JOptionPane.ERROR_MESSAGE );
+
+                if (ime.isEmpty() || prezime.isEmpty() || kontakt.isEmpty() || datumRodjenjaText.isEmpty() || m == null) {
+                    JOptionPane.showMessageDialog(dkf, "Sistem ne može da zapamti kupca", "Greška", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                java.util.Date datumRodjenja;
+                try {
+                    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd.MM.yyyy");
+                    sdf.setLenient(false);
+                    datumRodjenja = sdf.parse(datumRodjenjaText);
+                } catch (java.text.ParseException exc) {
+                    JOptionPane.showMessageDialog(dkf, "Datum rođenja mora biti u formatu dd.MM.yyyy.", "Greška", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (datumRodjenja.after(new java.util.Date())) {
+                    JOptionPane.showMessageDialog(dkf, "Datum rođenja ne može biti u budućnosti.", "Greška", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 
-                Kupac k = new Kupac(id, ime, prezime, brojLK, kontakt, starost, m);
+                Kupac k = new Kupac(id, ime, prezime, brojLK, kontakt, datumRodjenja, m);
                 try {
                     Komunikacija.getInstance().promeniKupca(k);
-                    JOptionPane.showMessageDialog(dkf, "Sistem je zapamtio kupca", "Uspeh", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(dkf, "Sistem je zapamtio kupca.", "Uspeh", JOptionPane.INFORMATION_MESSAGE);
                     Kordinator.getInstance().osveziFormuKupaca();
                     dkf.dispose();
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(dkf, "Sistem ne može da zapamti kupca", "Greška", JOptionPane.ERROR_MESSAGE);
+                    String poruka = ex.getMessage();
+                    if (poruka == null || poruka.isEmpty()) {
+                        poruka = "Sistem ne može da zapamti kupca.";
+                    }
+                    JOptionPane.showMessageDialog(dkf, poruka, "Greška", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -118,6 +156,7 @@ public class DodajKupcaController {
 
     private void pripremiPromeniFormu() {
         dkf.getjTextFieldID().setVisible(true);
+        dkf.getjTextFieldID().setEditable(false);
         dkf.getjLabelID().setVisible(true);
         dkf.getjButtonDodaj().setVisible(false);
         dkf.getjButtonPromeni().setVisible(true);
@@ -129,7 +168,8 @@ public class DodajKupcaController {
         dkf.getjTextFieldPrezime().setText(k.getPrezime());
         dkf.getjTextFieldBrojLK().setText(k.getBrojLoyaltyKartice());
         dkf.getjTextFieldKontakt().setText(k.getKontakt());
-        dkf.getjTextFieldStarost().setText(k.getStarost() + "");
+        java.text.SimpleDateFormat sdfPrikaz = new java.text.SimpleDateFormat("dd.MM.yyyy");
+        dkf.getjTextFieldStarost().setText(k.getDatumRodjenja() != null ? sdfPrikaz.format(k.getDatumRodjenja()) : "");
         dkf.getjComboBoxMesto().setSelectedItem(k.getMesto());
     }
 }

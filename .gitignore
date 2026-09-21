@@ -1,0 +1,5 @@
+build/
+dist/
+nbproject/private/
+NA_SEM_SERVER/config/config.properties
+**/nbproject/private/

@@ -6,7 +6,10 @@ package controller;
 
 import domen.Kupac;
 import domen.Mesto;
+import domen.Oprema;
 import domen.Prodavac;
+import domen.Racun;
+import domen.StrSprema;
 import java.util.List;
 import operacija.kupci.ObrisiKupcaSO;
 import operacija.kupci.PromeniKupcaSO;
@@ -14,6 +17,10 @@ import operacija.kupci.UbaciKupcaSO;
 import operacija.kupci.UcitajKupceSO;
 import operacija.login.LoginOperacija;
 import operacija.mesto.UcitajMestaSO;
+import operacija.oprema.UcitajOpremuSO;
+import operacija.prodavac.UcitajProdavceSO;
+import operacija.racun.KreirajRacunSO;
+import operacija.strsprema.UbaciStrSpremaSO;
 
 /**
  *
@@ -66,5 +73,25 @@ public class Controller {
         operacija.izvrsi(k, null);
     }
     
+    public void ubaciStrucnuSpremu(StrSprema ss) throws Exception {
+        UbaciStrSpremaSO operacija = new UbaciStrSpremaSO();
+        operacija.izvrsi(ss, null);
+    }
     
+    public List<Prodavac> ucitajProdavce() throws Exception {
+        UcitajProdavceSO operacija = new UcitajProdavceSO();
+        operacija.izvrsi(null, null);
+        return operacija.getListaProdavaca();
+    }
+
+    public List<Oprema> ucitajOpremu() throws Exception {
+        UcitajOpremuSO operacija = new UcitajOpremuSO();
+        operacija.izvrsi(null, null);
+        return operacija.getListaOpreme();
+    }
+    
+    public void kreirajRacun(Racun r) throws Exception {
+        KreirajRacunSO operacija = new KreirajRacunSO();
+        operacija.izvrsi(r, null);
+    }
 }

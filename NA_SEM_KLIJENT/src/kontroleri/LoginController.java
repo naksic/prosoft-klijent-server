@@ -35,14 +35,18 @@ public class LoginController {
                 String ki = lf.getjTextFieldKorisnickoIme().getText().trim();
                 String pass = String.valueOf(lf.getjPasswordField1().getPassword());
                 
+                if(ki.isEmpty() || pass.isEmpty()) {
+                    JOptionPane.showMessageDialog(lf, "Morate uneti korisničko ime i šifru.", "GREŠKA", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
                 Komunikacija.getInstance().konekcija();
                 Prodavac ulogovani = Komunikacija.getInstance().login(ki, pass);
                 if(ulogovani == null) {
-                    JOptionPane.showMessageDialog(lf, "Neuspešna prijava na sistem.", "GREŠKA", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(lf, "Korisničko ime i šifra nisu ispravni.", "GREŠKA", JOptionPane.ERROR_MESSAGE);
                 } else {
-                    //
                     Kordinator.getInstance().setUlogovani(ulogovani);
-                    JOptionPane.showMessageDialog(lf, "Uspešno logovanje na sistem.", "USPEH", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(lf, "Korisničko ime i šifra su ispravni.", "USPEH", JOptionPane.INFORMATION_MESSAGE);
                     Kordinator.getInstance().otvoriGlavnuFormu();
                     lf.dispose();
                 }

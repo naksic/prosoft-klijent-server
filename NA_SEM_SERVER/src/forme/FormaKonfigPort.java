@@ -19,6 +19,7 @@ public class FormaKonfigPort extends javax.swing.JDialog {
     public FormaKonfigPort(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        setLocationRelativeTo(parent);
     }
 
     /**
