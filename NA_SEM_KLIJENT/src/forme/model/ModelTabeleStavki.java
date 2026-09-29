@@ -53,9 +53,9 @@ public class ModelTabeleStavki extends AbstractTableModel {
             case 1:
                 return s.getKolicina();
             case 2:
-                return s.getOprema().getTrenutnaCena();
+                return String.format("%.2f", s.getCena());
             case 3:
-                return s.getKolicina() * s.getOprema().getTrenutnaCena();
+                return String.format("%.2f", s.getIznos());
             default:
                 return "N/A";
         }

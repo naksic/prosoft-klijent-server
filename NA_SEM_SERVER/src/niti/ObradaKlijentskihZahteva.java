@@ -55,6 +55,11 @@ public class ObradaKlijentskihZahteva extends Thread {
                             List<Kupac> kupci = Controller.getInstance().ucitajKupce();
                             odgovor.setOdgovor(kupci);
                             break;
+                        case PRETRAZI_KUPCE:
+                            Kupac kriterijumKupac = (Kupac) zahtev.getParametar();
+                            List<Kupac> filtriraniKupci = Controller.getInstance().pretraziKupce(kriterijumKupac);
+                            odgovor.setOdgovor(filtriraniKupci);
+                            break;
                         case OBRISI_KUPCA:
                             Kupac kZaBrisanje = (Kupac) zahtev.getParametar();
                             Controller.getInstance().obrisiKupca(kZaBrisanje);
@@ -91,6 +96,26 @@ public class ObradaKlijentskihZahteva extends Thread {
                             Racun racunZaKreiranje = (Racun) zahtev.getParametar();
                             Controller.getInstance().kreirajRacun(racunZaKreiranje);
                             odgovor.setOdgovor(null);
+                            break;
+                        case PRETRAZI_RACUN:
+                            Racun kriterijumRacun = (Racun) zahtev.getParametar();
+                            List<Racun> filtriraniRacuni = Controller.getInstance().pretraziRacune(kriterijumRacun);
+                            odgovor.setOdgovor(filtriraniRacuni);
+                            break;
+                        case PROMENI_RACUN:
+                            Racun racunZaIzmenu = (Racun) zahtev.getParametar();
+                            Controller.getInstance().promeniRacun(racunZaIzmenu);
+                            odgovor.setOdgovor(null);
+                            break;
+                        case UCITAJ_JEDNOG_KUPCA:
+                            Kupac kupacZaDetalje = (Kupac) zahtev.getParametar();
+                            Kupac pronadjenKupac = Controller.getInstance().ucitajJednogKupca(kupacZaDetalje);
+                            odgovor.setOdgovor(pronadjenKupac);
+                            break;
+                        case UCITAJ_JEDAN_RACUN:
+                            Racun racunZaDetalje = (Racun) zahtev.getParametar();
+                            Racun pronadjenRacun = Controller.getInstance().ucitajJedanRacun(racunZaDetalje);
+                            odgovor.setOdgovor(pronadjenRacun);
                             break;
                         default:
                             System.out.println("GREŠKA, OPERACIJA NE POSTOJI");

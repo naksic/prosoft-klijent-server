@@ -12,13 +12,14 @@ import kordinator.Kordinator;
  * @author Korisnik
  */
 public class GlavnaForma extends javax.swing.JFrame {
-
+    private javax.swing.Timer casovnik;
     /**
      * Creates new form GlavnaForma
      */
     public GlavnaForma() {
         initComponents();
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+        pokreniSat();
     }
 
     /**
@@ -32,6 +33,8 @@ public class GlavnaForma extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jLabelUlogovani = new javax.swing.JLabel();
+        jLabelDatum = new javax.swing.JLabel();
+        jLabelVreme = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -45,6 +48,10 @@ public class GlavnaForma extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("Dobrodošli, ");
+
+        jLabelDatum.setText("Datum: ");
+
+        jLabelVreme.setText("Vreme: ");
 
         jMenu1.setText("Kupac");
 
@@ -77,6 +84,11 @@ public class GlavnaForma extends javax.swing.JFrame {
         jMenu2.add(jMenuItem3);
 
         jMenuItem4.setText("pregled");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem4);
 
         jMenuBar1.add(jMenu2);
@@ -101,9 +113,14 @@ public class GlavnaForma extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(44, 44, 44)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(jLabelUlogovani, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabelUlogovani, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jLabelVreme, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabelDatum, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)))
                 .addContainerGap(251, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -113,7 +130,11 @@ public class GlavnaForma extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabelUlogovani, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(257, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabelDatum)
+                .addGap(18, 18, 18)
+                .addComponent(jLabelVreme)
+                .addContainerGap(189, Short.MAX_VALUE))
         );
 
         pack();
@@ -135,6 +156,10 @@ public class GlavnaForma extends javax.swing.JFrame {
         Kordinator.getInstance().otvoriDodajRacunFormu();
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        Kordinator.getInstance().otvoriPrikazRacunaFormu();
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+
     public JLabel getjLabelUlogovani() {
         return jLabelUlogovani;
     }
@@ -143,10 +168,30 @@ public class GlavnaForma extends javax.swing.JFrame {
         this.jLabelUlogovani = jLabelUlogovani;
     }
    
+    private void pokreniSat() {
+        azurirajDatumIVreme();
+        casovnik = new javax.swing.Timer(1000, new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                azurirajDatumIVreme();
+            }
+        });
+        casovnik.start();
+    }
+
+    private void azurirajDatumIVreme() {
+        java.text.SimpleDateFormat sdfDatum = new java.text.SimpleDateFormat("dd.MM.yyyy.");
+        java.text.SimpleDateFormat sdfVreme = new java.text.SimpleDateFormat("HH:mm:ss");
+        java.util.Date sada = new java.util.Date();
+        jLabelDatum.setText("Datum: " + sdfDatum.format(sada));
+        jLabelVreme.setText("Vreme: " + sdfVreme.format(sada));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabelDatum;
     private javax.swing.JLabel jLabelUlogovani;
+    private javax.swing.JLabel jLabelVreme;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;

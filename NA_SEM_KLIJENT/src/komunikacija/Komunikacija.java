@@ -68,6 +68,20 @@ public class Komunikacija {
         return kupci;
     }
 
+    public List<Kupac> pretraziKupce(Kupac kriterijum) throws Exception {
+        Zahtev zahtev = new Zahtev(Operacija.PRETRAZI_KUPCE, kriterijum);
+        posiljalac.posalji(zahtev);
+
+        Odgovor odg = (Odgovor) primalac.primi();
+        Object odgovor = odg.getOdgovor();
+        if (odgovor instanceof Exception) {
+            Exception serverGreska = (Exception) odgovor;
+            serverGreska.printStackTrace();
+            throw new Exception(serverGreska.getMessage());
+        }
+        return (List<Kupac>) odgovor;
+    }
+    
     public void obrisiKupca(Kupac k) throws Exception {
         Zahtev zahtev = new Zahtev(Operacija.OBRISI_KUPCA, k);
         posiljalac.posalji(zahtev);
@@ -152,5 +166,59 @@ public class Komunikacija {
         if (odg.getOdgovor() != null) {
             throw new Exception("Greska");
         }
+    }
+    
+    public List<Racun> pretraziRacune(Racun kriterijum) throws Exception {
+        Zahtev zahtev = new Zahtev(Operacija.PRETRAZI_RACUN, kriterijum);
+        posiljalac.posalji(zahtev);
+
+        Odgovor odg = (Odgovor) primalac.primi();
+        Object odgovor = odg.getOdgovor();
+        if (odgovor instanceof Exception) {
+            Exception serverGreska = (Exception) odgovor;
+            serverGreska.printStackTrace();
+            throw new Exception(serverGreska.getMessage());
+        }
+        return (List<Racun>) odgovor;
+    }
+    
+    public void promeniRacun(Racun r) throws Exception {
+        Zahtev zahtev = new Zahtev(Operacija.PROMENI_RACUN, r);
+        posiljalac.posalji(zahtev);
+
+        Odgovor odg = (Odgovor) primalac.primi();
+        if (odg.getOdgovor() != null) {
+            Exception serverGreska = (Exception) odg.getOdgovor();
+            serverGreska.printStackTrace();
+            throw new Exception(serverGreska.getMessage());
+        }
+    }
+    
+    public Kupac ucitajJednogKupca(Kupac k) throws Exception {
+        Zahtev zahtev = new Zahtev(Operacija.UCITAJ_JEDNOG_KUPCA, k);
+        posiljalac.posalji(zahtev);
+
+        Odgovor odg = (Odgovor) primalac.primi();
+        Object odgovor = odg.getOdgovor();
+        if (odgovor instanceof Exception) {
+            Exception serverGreska = (Exception) odgovor;
+            serverGreska.printStackTrace();
+            throw new Exception(serverGreska.getMessage());
+        }
+        return (Kupac) odgovor;
+    }
+    
+    public Racun ucitajJedanRacun(Racun r) throws Exception {
+        Zahtev zahtev = new Zahtev(Operacija.UCITAJ_JEDAN_RACUN, r);
+        posiljalac.posalji(zahtev);
+
+        Odgovor odg = (Odgovor) primalac.primi();
+        Object odgovor = odg.getOdgovor();
+        if (odgovor instanceof Exception) {
+            Exception serverGreska = (Exception) odgovor;
+            serverGreska.printStackTrace();
+            throw new Exception(serverGreska.getMessage());
+        }
+        return (Racun) odgovor;
     }
 }

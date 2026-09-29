@@ -19,6 +19,7 @@ public class StavkaRacuna implements ApstraktniDomenskiObjekat{
     private double cena;
     private double iznos;
     private Oprema oprema;
+    private StatusStavke status;
 
     public StavkaRacuna() {
     }
@@ -79,6 +80,14 @@ public class StavkaRacuna implements ApstraktniDomenskiObjekat{
     public void setOprema(Oprema oprema) {
         this.oprema = oprema;
     }
+    
+    public StatusStavke getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusStavke status) {
+        this.status = status;
+    }
 
     @Override
     public int hashCode() {
@@ -137,7 +146,7 @@ public class StavkaRacuna implements ApstraktniDomenskiObjekat{
 
     @Override
     public String vratiPrimarniKljuc() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return "racun = " + racun.getIdRacun() + " AND rb = " + rb;
     }
 
     @Override

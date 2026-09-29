@@ -6,17 +6,17 @@ package operacija.racun;
 
 import domen.NacinPlacanja;
 import domen.Racun;
+import domen.StatusStavke;
 import domen.StavkaRacuna;
 import operacija.ApstraktnaGenerickaOperacija;
 import repository.db.DbConnectionFactory;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
 /**
  *
  * @author Korisnik
  */
-public class KreirajRacunSO extends ApstraktnaGenerickaOperacija {
+public class PromeniRacunSO extends ApstraktnaGenerickaOperacija {
 
     @Override
     protected void preduslovi(Object param) throws Exception {
@@ -24,8 +24,9 @@ public class KreirajRacunSO extends ApstraktnaGenerickaOperacija {
             throw new Exception("Sistem ne može da zapamti račun");
         }
         Racun r = (Racun) param;
-        if (r.getProdavac() == null || r.getKupac() == null || r.getDatumIzdavanja() == null
-                || r.getNacinPlacanja() == null || r.getStavke() == null || r.getStavke().isEmpty()) {
+        if (r.getIdRacun() <= 0 || r.getProdavac() == null || r.getKupac() == null
+                || r.getDatumIzdavanja() == null || r.getNacinPlacanja() == null
+                || r.getStavke() == null || r.getStavke().isEmpty()) {
             throw new Exception("Sistem ne može da zapamti račun");
         }
         for (StavkaRacuna s : r.getStavke()) {
@@ -42,24 +43,42 @@ public class KreirajRacunSO extends ApstraktnaGenerickaOperacija {
         racun.setPopust(izracunajPopust(racun));
 
         double ukupno = 0;
+        int sledeciRb = sledeciSlobodniRb(racun.getIdRacun());
+
         for (StavkaRacuna s : racun.getStavke()) {
-            s.setCena(s.getOprema().getTrenutnaCena());
-            s.setIznos(zaokruzi(s.getKolicina() * s.getCena()));
+            if (s.getStatus() == StatusStavke.OBRISANA) {
+                continue;
+            }
+            if (s.getStatus() == StatusStavke.NOVA || s.getStatus() == StatusStavke.IZMENJENA) {
+                s.setCena(s.getOprema().getTrenutnaCena());
+                s.setIznos(zaokruzi(s.getKolicina() * s.getCena()));
+            }
+            if (s.getStatus() == StatusStavke.NOVA) {
+                s.setRb(sledeciRb);
+                sledeciRb++;
+            }
             ukupno += s.getIznos();
         }
         racun.setUkupanIznos(zaokruzi((1 - racun.getPopust()) * ukupno));
 
-        broker.add(racun);
+        broker.edit(racun);
 
-        int idRacuna = vratiPoslednjiGenerisaniId();
-        racun.setIdRacun(idRacuna);
-
-        int rb = 1;
         for (StavkaRacuna s : racun.getStavke()) {
             s.setRacun(racun);
-            s.setRb(rb);
-            broker.add(s);
-            rb++;
+            switch (s.getStatus()) {
+                case NOVA:
+                    broker.add(s);
+                    break;
+                case IZMENJENA:
+                    broker.edit(s);
+                    break;
+                case OBRISANA:
+                    broker.delete(s);
+                    break;
+                case NEPROMENJENA:
+                default:
+                    break;
+            }
         }
     }
     
@@ -77,20 +96,20 @@ public class KreirajRacunSO extends ApstraktnaGenerickaOperacija {
         }
         return popust;
     }
+
+    private double zaokruzi(double vrednost) {
+        return Math.round(vrednost * 100.0) / 100.0;
+    }
     
-    private int vratiPoslednjiGenerisaniId() throws Exception {
+    private int sledeciSlobodniRb(int idRacuna) throws Exception {
         Statement st = DbConnectionFactory.getInstance().getConnection().createStatement();
-        ResultSet rs = st.executeQuery("SELECT LAST_INSERT_ID()");
-        int id = -1;
+        ResultSet rs = st.executeQuery("SELECT MAX(rb) AS maxRb FROM stavkaracuna WHERE racun = " + idRacuna);
+        int maxRb = 0;
         if (rs.next()) {
-            id = rs.getInt(1);
+            maxRb = rs.getInt("maxRb");
         }
         rs.close();
         st.close();
-        return id;
-    }
-    
-    private double zaokruzi(double vrednost) {
-        return Math.round(vrednost * 100.0) / 100.0;
+        return maxRb + 1;
     }
 }

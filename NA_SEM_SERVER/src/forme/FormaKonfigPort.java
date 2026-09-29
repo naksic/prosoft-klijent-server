@@ -39,7 +39,7 @@ public class FormaKonfigPort extends javax.swing.JDialog {
 
         jLabel1.setText("PORT");
 
-        jButtonSacuvaj.setText("Sacuvaj");
+        jButtonSacuvaj.setText("Sačuvaj");
         jButtonSacuvaj.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSacuvajActionPerformed(evt);

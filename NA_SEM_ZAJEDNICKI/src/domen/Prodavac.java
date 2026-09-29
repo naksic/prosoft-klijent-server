@@ -27,7 +27,8 @@ public class Prodavac implements ApstraktniDomenskiObjekat {
     public Prodavac() {
     }
 
-    public Prodavac(int idProdavac, String email, String ime, String prezime, Date datumRodjenja, String telefon, String korisnickoIme, String sifra) {
+    public Prodavac(int idProdavac, String email, String ime, String prezime, Date datumRodjenja, String telefon,
+            String korisnickoIme, String sifra) {
         this.idProdavac = idProdavac;
         this.email = email;
         this.ime = ime;

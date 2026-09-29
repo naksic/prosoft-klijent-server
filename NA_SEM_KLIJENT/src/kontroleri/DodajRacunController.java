@@ -9,8 +9,10 @@ import domen.NacinPlacanja;
 import domen.Oprema;
 import domen.Prodavac;
 import domen.Racun;
+import domen.StatusStavke;
 import domen.StavkaRacuna;
 import forme.DodajRacunForma;
+import forme.FormaTip;
 import forme.model.ModelTabeleStavki;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,6 +23,8 @@ import javax.swing.JOptionPane;
 import komunikacija.Komunikacija;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import forme.FormaTip;
+import kordinator.Kordinator;
 
 /**
  *
@@ -29,27 +33,31 @@ import java.text.SimpleDateFormat;
 public class DodajRacunController {
     private final DodajRacunForma drf;
     private List<StavkaRacuna> stavke;
+    private List<StavkaRacuna> obrisaneStavke;
 
     public DodajRacunController(DodajRacunForma drf) {
         this.drf = drf;
         addActionListener();
     }
 
-    public void otvoriFormu() {
-        pripremiFormu();
+    public void otvoriFormu(FormaTip tip) {
+        pripremiFormu(tip);
         drf.setVisible(true);
     }
 
-    private void pripremiFormu() {
+    private void pripremiFormu(FormaTip tip) {
         stavke = new ArrayList<>();
+        obrisaneStavke = new ArrayList<>();
         drf.getjComboBoxKupac().removeAllItems();
         drf.getjComboBoxProdavac().removeAllItems();
         drf.getjComboBoxNacinPlacanja().removeAllItems();
         drf.getjComboBoxOprema().removeAllItems();
         drf.getjTextFieldNapomena().setText("");
         drf.getjTextFieldKolicina().setText("");
-        drf.getjLabelUkupanIznos().setText("0.0");
+        drf.getjLabelUkupanIznos().setText("0.00");
         drf.getjTextFieldDatum().setText("");
+        drf.getjButtonPromeni().setVisible(false);
+        drf.getjButtonKreiraj().setVisible(true);
 
         List<Kupac> listaKupaca = Komunikacija.getInstance().ucitajKupce();
         for (Kupac k : listaKupaca) {
@@ -74,8 +82,54 @@ public class DodajRacunController {
         }
         drf.getjComboBoxOprema().setSelectedIndex(-1);
 
+        switch (tip) {
+            case KREIRAJ:
+                pripremiKreirajFormu();
+                break;
+            case PROMENI:
+                pripremiPromeniFormu();
+                break;
+            default:
+                throw new AssertionError();
+        }
+    }
+
+    private void pripremiKreirajFormu() {
+        drf.getjTextFieldID().setVisible(false);
+        drf.getjLabelID().setVisible(false);
+
         ModelTabeleStavki mts = new ModelTabeleStavki(stavke);
         drf.getjTableStavke().setModel(mts);
+    }
+
+    private void pripremiPromeniFormu() {
+        drf.getjTextFieldID().setVisible(true);
+        drf.getjTextFieldID().setEditable(false);
+        drf.getjLabelID().setVisible(true);
+        drf.getjButtonKreiraj().setVisible(false);
+        drf.getjButtonPromeni().setVisible(true);
+
+        Racun r = (Racun) Kordinator.getInstance().vratiParam("racun");
+
+        stavke = new ArrayList<>(r.getStavke());
+        stavke = new ArrayList<>(r.getStavke());
+        for (StavkaRacuna s : stavke) {
+            s.setStatus(StatusStavke.NEPROMENJENA);
+        }
+
+        drf.getjTextFieldID().setText(r.getIdRacun() + "");
+        drf.getjComboBoxKupac().setSelectedItem(r.getKupac());
+        drf.getjComboBoxProdavac().setSelectedItem(r.getProdavac());
+        drf.getjComboBoxNacinPlacanja().setSelectedItem(r.getNacinPlacanja());
+        drf.getjTextFieldNapomena().setText(r.getNapomena());
+
+        SimpleDateFormat sdfPrikaz = new SimpleDateFormat("dd.MM.yyyy");
+        drf.getjTextFieldDatum().setText(r.getDatumIzdavanja() != null ? sdfPrikaz.format(r.getDatumIzdavanja()) : "");
+
+        ModelTabeleStavki mts = new ModelTabeleStavki(stavke);
+        drf.getjTableStavke().setModel(mts);
+
+        osveziUkupanIznos();
     }
 
     private void addActionListener() {
@@ -103,7 +157,10 @@ public class DodajRacunController {
                     return;
                 }
 
-                StavkaRacuna s = new StavkaRacuna(null, stavke.size() + 1, kolicina, o.getTrenutnaCena(), kolicina * o.getTrenutnaCena(), o);
+                double cena = o.getTrenutnaCena();
+                double iznosStavke = Math.round(kolicina * cena * 100.0) / 100.0;
+                StavkaRacuna s = new StavkaRacuna(null, stavke.size() + 1, kolicina, cena, iznosStavke, o);
+                s.setStatus(StatusStavke.NOVA);
                 stavke.add(s);
 
                 ModelTabeleStavki mts = (ModelTabeleStavki) drf.getjTableStavke().getModel();
@@ -125,7 +182,14 @@ public class DodajRacunController {
                     return;
                 }
 
+                StavkaRacuna s = stavke.get(red);
                 stavke.remove(red);
+
+                if (s.getStatus() != StatusStavke.NOVA) {
+                    s.setStatus(StatusStavke.OBRISANA);
+                    obrisaneStavke.add(s);
+                }
+
                 ModelTabeleStavki mts = (ModelTabeleStavki) drf.getjTableStavke().getModel();
                 mts.setLista(stavke);
 
@@ -143,17 +207,17 @@ public class DodajRacunController {
                 String datumText = drf.getjTextFieldDatum().getText().trim();
 
                 if (k == null || p == null || np == null || stavke.isEmpty() || datumText.isEmpty()) {
-                    JOptionPane.showMessageDialog(drf, "Sistem ne može da kreira račun.", "Greška", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(drf, "Sistem ne može da zapamti račun.", "Greška", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
                 Date datum;
                 try {
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy.");
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
                     sdf.setLenient(false);
                     datum = sdf.parse(datumText);
                 } catch (ParseException exc) {
-                    JOptionPane.showMessageDialog(drf, "Datum mora biti u formatu dd.MM.yyyy. (npr. 23.08.2026.)", "Greška", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(drf, "Datum mora biti u formatu dd.MM.yyyy (npr. 23.08.2026)", "Greška", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
@@ -182,6 +246,96 @@ public class DodajRacunController {
                 osveziUkupanIznos();
             }
         });
+        drf.promeniAddActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Kupac k = (Kupac) drf.getjComboBoxKupac().getSelectedItem();
+                Prodavac p = (Prodavac) drf.getjComboBoxProdavac().getSelectedItem();
+                NacinPlacanja np = (NacinPlacanja) drf.getjComboBoxNacinPlacanja().getSelectedItem();
+                String napomena = drf.getjTextFieldNapomena().getText().trim();
+                String datumText = drf.getjTextFieldDatum().getText().trim();
+                int id = Integer.parseInt(drf.getjTextFieldID().getText().trim());
+
+                if (k == null || p == null || np == null || stavke.isEmpty() || datumText.isEmpty()) {
+                    JOptionPane.showMessageDialog(drf, "Sistem ne može da zapamti račun.", "Greška", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                Date datum;
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+                    sdf.setLenient(false);
+                    datum = sdf.parse(datumText);
+                } catch (ParseException exc) {
+                    JOptionPane.showMessageDialog(drf, "Datum mora biti u formatu dd.MM.yyyy (npr. 23.08.2026)", "Greška", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                List<StavkaRacuna> sveStavke = new ArrayList<>(stavke);
+                sveStavke.addAll(obrisaneStavke);
+
+                Racun r = new Racun(id, datum, np, napomena, 0, 0, p, k);
+                r.setStavke(sveStavke);
+
+                try {
+                    Komunikacija.getInstance().promeniRacun(r);
+                    JOptionPane.showMessageDialog(drf, "Sistem je zapamtio račun.", "Uspeh", JOptionPane.INFORMATION_MESSAGE);
+                    Kordinator.getInstance().osveziFormuRacuna();
+                    drf.dispose();
+                } catch (Exception ex) {
+                    String poruka = ex.getMessage();
+                    if (poruka == null || poruka.isEmpty()) {
+                        poruka = "Sistem ne može da zapamti račun.";
+                    }
+                    JOptionPane.showMessageDialog(drf, poruka, "Greška", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        drf.izmeniStavkuAddActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int red = drf.getjTableStavke().getSelectedRow();
+                if (red == -1) {
+                    JOptionPane.showMessageDialog(drf, "Sistem ne može da nađe stavku.", "Greška", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                String kolicinaText = drf.getjTextFieldKolicina().getText().trim();
+                if (kolicinaText.isEmpty()) {
+                    JOptionPane.showMessageDialog(drf, "Unesite novu količinu u polje Količina.", "Greška", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                int kolicina;
+                try {
+                    kolicina = Integer.parseInt(kolicinaText);
+                } catch (NumberFormatException exc) {
+                    JOptionPane.showMessageDialog(drf, "Količina mora biti ceo broj.", "Greška", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (kolicina <= 0) {
+                    JOptionPane.showMessageDialog(drf, "Sistem ne može da izmeni stavku.", "Greška", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                StavkaRacuna s = stavke.get(red);
+                double cena = s.getOprema().getTrenutnaCena();
+                s.setKolicina(kolicina);
+                s.setCena(cena);
+                s.setIznos(Math.round(kolicina * cena * 100.0) / 100.0);
+
+                if (s.getStatus() != StatusStavke.NOVA) {
+                    s.setStatus(StatusStavke.IZMENJENA);
+                }
+
+                ModelTabeleStavki mts = (ModelTabeleStavki) drf.getjTableStavke().getModel();
+                mts.fireTableDataChanged();
+
+                drf.getjTextFieldKolicina().setText("");
+                osveziUkupanIznos();
+            }
+        });
     }
 
     private void osveziUkupanIznos() {
@@ -193,7 +347,7 @@ public class DodajRacunController {
         double popust = izracunajPopust();
         double saPopustom = (1 - popust) * ukupno;
 
-        drf.getjLabelUkupanIznos().setText(String.valueOf(saPopustom));
+        drf.getjLabelUkupanIznos().setText(String.format("%.2f", saPopustom));
     }
 
     private double izracunajPopust() {

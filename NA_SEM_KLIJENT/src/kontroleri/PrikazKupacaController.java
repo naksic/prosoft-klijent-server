@@ -100,7 +100,7 @@ public class PrikazKupacaController {
                 String kontakt = pkf.getjTextFieldKontakt().getText().trim();
                 String starost = pkf.getjTextFieldStarost().getText().trim();
                 Mesto mesto = (Mesto) pkf.getjComboBoxMesta().getSelectedItem();
-                
+
                 if(ime.isEmpty() && prezime.isEmpty() && brojLK.isEmpty() && kontakt.isEmpty() && starost.isEmpty() && mesto == null) {
                     JOptionPane.showMessageDialog(pkf, "Sistem ne može da nađe kupce po zadatim kriterijumima.", "Greška", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -114,15 +114,33 @@ public class PrikazKupacaController {
                         return;
                     }
                 }
-                ModelTabeleKupac mtk = (ModelTabeleKupac) pkf.getjTableKupci().getModel();
-                List<Kupac> rezultat = mtk.pretrazi(ime, prezime, brojLK, kontakt, starostInt, mesto);
-                
-                if (rezultat.isEmpty()) {
-                    JOptionPane.showMessageDialog(pkf,
-                            "Sistem ne može da nađe kupce po zadatim kriterijumima.","Greška",JOptionPane.ERROR_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(pkf,
-                            "Sistem je našao kupce po zadatim kriterijumima.","Uspeh",JOptionPane.INFORMATION_MESSAGE);
+
+                Kupac kriterijum = new Kupac();
+                kriterijum.setIme(ime);
+                kriterijum.setPrezime(prezime);
+                kriterijum.setBrojLoyaltyKartice(brojLK);
+                kriterijum.setKontakt(kontakt);
+                kriterijum.setStarost(starostInt);
+                kriterijum.setMesto(mesto);
+
+                try {
+                    List<Kupac> rezultat = Komunikacija.getInstance().pretraziKupce(kriterijum);
+                    ModelTabeleKupac mtk = (ModelTabeleKupac) pkf.getjTableKupci().getModel();
+                    mtk.setLista(rezultat);
+
+                    if (rezultat.isEmpty()) {
+                        JOptionPane.showMessageDialog(pkf,
+                                "Sistem ne može da nađe kupce po zadatim kriterijumima.","Greška",JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(pkf,
+                                "Sistem je našao kupce po zadatim kriterijumima.","Uspeh",JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } catch (Exception ex) {
+                    String poruka = ex.getMessage();
+                    if (poruka == null || poruka.isEmpty()) {
+                        poruka = "Sistem ne može da nađe kupce po zadatim kriterijumima.";
+                    }
+                    JOptionPane.showMessageDialog(pkf, poruka, "Greška", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -130,6 +148,29 @@ public class PrikazKupacaController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 pripremiFormu();
+            }
+        });
+        pkf.addBtnDetaljiActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int red = pkf.getjTableKupci().getSelectedRow();
+                if (red == -1) {
+                    JOptionPane.showMessageDialog(pkf, "Sistem ne može da nađe kupca.", "Greška", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                ModelTabeleKupac mtk = (ModelTabeleKupac) pkf.getjTableKupci().getModel();
+                Kupac k = mtk.getLista().get(red);
+                try {
+                    Kupac pronadjenKupac = Komunikacija.getInstance().ucitajJednogKupca(k);
+                    JOptionPane.showMessageDialog(pkf, "Sistem je našao kupca.", "Uspeh", JOptionPane.INFORMATION_MESSAGE);
+                    Kordinator.getInstance().otvoriDetaljeKupcaFormu(pronadjenKupac);
+                } catch (Exception ex) {
+                    String poruka = ex.getMessage();
+                    if (poruka == null || poruka.isEmpty()) {
+                        poruka = "Sistem ne može da nađe kupca.";
+                    }
+                    JOptionPane.showMessageDialog(pkf, poruka, "Greška", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
     }

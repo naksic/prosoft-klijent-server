@@ -142,7 +142,7 @@ public class Kupac implements ApstraktniDomenskiObjekat {
 
     @Override
     public String toString() {
-        return ime + " " + prezime + " - " + mesto.getNaziv();
+        return ime + " " + prezime;
     }
 
     @Override
@@ -174,13 +174,13 @@ public class Kupac implements ApstraktniDomenskiObjekat {
 
     @Override
     public String vratiKoloneZaUbacivanje() {
-        return "ime,prezime,brojLoyaltyKartice,kontakt,starost,datumRodjenja,mesto";
+        return "ime,prezime,brojLoyaltyKartice,kontakt,datumRodjenja,mesto";
     }
 
     @Override
     public String vratiVrednostZaUbacivanje() {
         java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
-        return "'" + ime + "','" + prezime + "'," + brojLoyaltyKarticeZaUpit() + ",'" + kontakt + "'," + starost + ",'" + sdf.format(datumRodjenja) + "'," + mesto.getIdMesto();
+    return "'" + ime + "','" + prezime + "'," + brojLoyaltyKarticeZaUpit() + ",'" + kontakt + "','" + sdf.format(datumRodjenja) + "'," + mesto.getIdMesto();
     }
 
     @Override
@@ -196,7 +196,7 @@ public class Kupac implements ApstraktniDomenskiObjekat {
     @Override
     public String vratiVrednostZaIzmenu() {
         java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
-        return "ime = '" + ime + "', prezime = '" + prezime + "', brojLoyaltyKartice = " + brojLoyaltyKarticeZaUpit() + ", kontakt = '" + kontakt + "', starost = " + starost + ", datumRodjenja = '" + sdf.format(datumRodjenja) + "', mesto = " + mesto.getIdMesto();
+        return "ime = '" + ime + "', prezime = '" + prezime + "', brojLoyaltyKartice = " + brojLoyaltyKarticeZaUpit() + ", kontakt = '" + kontakt + "', datumRodjenja = '" + sdf.format(datumRodjenja) + "', mesto = " + mesto.getIdMesto();
     }
     
     private String brojLoyaltyKarticeZaUpit() {

@@ -28,6 +28,7 @@ public class ModelTabeleKupac extends AbstractTableModel {
 
     public void setLista(List<Kupac> lista) {
         this.lista = lista;
+        fireTableDataChanged();
     }
     
     @Override
@@ -68,19 +69,18 @@ public class ModelTabeleKupac extends AbstractTableModel {
         return kolone[column];
     }
 
-    public List<Kupac> pretrazi(String ime, String prezime, String brojLK, String kontakt, int starostInt, Mesto mesto) {
-        List<Kupac> filtriranaLista = this.lista.stream()
-            .filter(k -> (ime == null || ime.isEmpty() || k.getIme().toLowerCase().contains(ime.toLowerCase())))
-            .filter(k -> (prezime == null || prezime.isEmpty() || k.getPrezime().toLowerCase().contains(prezime.toLowerCase())))
-            .filter(k -> (brojLK == null || brojLK.isEmpty() || (k.getBrojLoyaltyKartice() != null && k.getBrojLoyaltyKartice().contains(brojLK))))
-            .filter(k -> (kontakt == null || kontakt.isEmpty() || k.getKontakt().toLowerCase().contains(kontakt.toLowerCase())))
-            .filter(k -> (starostInt <= 0 || k.getStarost() == starostInt))
-            .filter(k -> (mesto == null || k.getMesto().equals(mesto))).collect(Collectors.toList());
-
-        this.lista = filtriranaLista;
-        fireTableDataChanged();
-        return filtriranaLista;
-    }
-    
-    
+//    public List<Kupac> pretrazi(String ime, String prezime, String brojLK, String kontakt, int starostInt, Mesto mesto) {
+//        List<Kupac> filtriranaLista = this.lista.stream()
+//            .filter(k -> (ime == null || ime.isEmpty() || k.getIme().toLowerCase().contains(ime.toLowerCase())))
+//            .filter(k -> (prezime == null || prezime.isEmpty() || k.getPrezime().toLowerCase().contains(prezime.toLowerCase())))
+//            .filter(k -> (brojLK == null || brojLK.isEmpty() || (k.getBrojLoyaltyKartice() != null && k.getBrojLoyaltyKartice().contains(brojLK))))
+//            .filter(k -> (kontakt == null || kontakt.isEmpty() || k.getKontakt().toLowerCase().contains(kontakt.toLowerCase())))
+//            .filter(k -> (starostInt <= 0 || k.getStarost() == starostInt))
+//            .filter(k -> (mesto == null || k.getMesto().equals(mesto))).collect(Collectors.toList());
+//
+//        this.lista = filtriranaLista;
+//        fireTableDataChanged();
+//        return filtriranaLista;
+//    }
+  
 }

@@ -29,7 +29,8 @@ public class Racun implements ApstraktniDomenskiObjekat {
     public Racun() {
     }
 
-    public Racun(int idRacun, Date datumIzdavanja, NacinPlacanja nacinPlacanja, String napomena, double popust, double ukupanIznos, Prodavac prodavac, Kupac kupac) {
+    public Racun(int idRacun, Date datumIzdavanja, NacinPlacanja nacinPlacanja, String napomena, double popust, double ukupanIznos,
+            Prodavac prodavac, Kupac kupac) {
         this.idRacun = idRacun;
         this.datumIzdavanja = datumIzdavanja;
         this.nacinPlacanja = nacinPlacanja;
@@ -159,7 +160,43 @@ public class Racun implements ApstraktniDomenskiObjekat {
 
     @Override
     public List<ApstraktniDomenskiObjekat> vratiListu(ResultSet rs) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<ApstraktniDomenskiObjekat> lista = new ArrayList<>();
+        while (rs.next()) {
+            int idRacun = rs.getInt("racun.idRacun");
+            java.sql.Date datumIzdavanja = rs.getDate("racun.datumIzdavanja");
+            NacinPlacanja nacinPlacanja = NacinPlacanja.valueOf(rs.getString("racun.nacinPlacanja"));
+            String napomena = rs.getString("racun.napomena");
+            double popust = rs.getDouble("racun.popust");
+            double ukupanIznos = rs.getDouble("racun.ukupanIznos");
+
+            int idProdavac = rs.getInt("prodavac.idProdavac");
+            String emailP = rs.getString("prodavac.email");
+            String imeP = rs.getString("prodavac.ime");
+            String prezimeP = rs.getString("prodavac.prezime");
+            java.sql.Date datumRodjenjaP = rs.getDate("prodavac.datumRodjenja");
+            String telefonP = rs.getString("prodavac.telefon");
+            String korisnickoIme = rs.getString("prodavac.korisnickoIme");
+            String sifra = rs.getString("prodavac.sifra");
+            Prodavac prodavac = new Prodavac(idProdavac, emailP, imeP, prezimeP, datumRodjenjaP, telefonP, korisnickoIme, sifra);
+
+            int idKupca = rs.getInt("kupac.idKupca");
+            String imeK = rs.getString("kupac.ime");
+            String prezimeK = rs.getString("kupac.prezime");
+            String brojLK = rs.getString("kupac.brojLoyaltyKartice");
+            String kontakt = rs.getString("kupac.kontakt");
+            java.sql.Date datumRodjenjaK = rs.getDate("kupac.datumRodjenja");
+
+            int idMesto = rs.getInt("mesto.idMesto");
+            String nazivMesta = rs.getString("mesto.naziv");
+            int ptt = rs.getInt("mesto.postanskiBroj");
+            Mesto mesto = new Mesto(idMesto, nazivMesta, ptt);
+
+            Kupac kupac = new Kupac(idKupca, imeK, prezimeK, brojLK, kontakt, datumRodjenjaK, mesto);
+
+            Racun racun = new Racun(idRacun, datumIzdavanja, nacinPlacanja, napomena, popust, ukupanIznos, prodavac, kupac);
+            lista.add(racun);
+        }
+        return lista;
     }
 
     @Override
@@ -185,7 +222,10 @@ public class Racun implements ApstraktniDomenskiObjekat {
 
     @Override
     public String vratiVrednostZaIzmenu() {
-        return "datumIzdavanja = '" + datumIzdavanja + "', nacinPlacanja = '" + nacinPlacanja + "', napomena = '" + napomena + "', popust = " + popust + ", ukupanIznos = " + ukupanIznos;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return "datumIzdavanja = '" + sdf.format(datumIzdavanja) + "', nacinPlacanja = '" + nacinPlacanja
+                + "', napomena = '" + napomena + "', popust = " + popust + ", ukupanIznos = " + ukupanIznos
+                + ", prodavac = " + prodavac.getIdProdavac() + ", kupac = " + kupac.getIdKupca();
     }
 
 }

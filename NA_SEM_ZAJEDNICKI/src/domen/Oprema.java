@@ -89,7 +89,7 @@ public class Oprema implements ApstraktniDomenskiObjekat {
 
     @Override
     public String toString() {
-        return naziv + " " + trenutnaCena;
+        return naziv;
     }
 
     @Override

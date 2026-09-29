@@ -12,14 +12,19 @@ import domen.Racun;
 import domen.StrSprema;
 import java.util.List;
 import operacija.kupci.ObrisiKupcaSO;
+import operacija.kupci.PretraziKupceSO;
 import operacija.kupci.PromeniKupcaSO;
 import operacija.kupci.UbaciKupcaSO;
+import operacija.kupci.UcitajJednogKupcaSO;
 import operacija.kupci.UcitajKupceSO;
 import operacija.login.LoginOperacija;
 import operacija.mesto.UcitajMestaSO;
 import operacija.oprema.UcitajOpremuSO;
 import operacija.prodavac.UcitajProdavceSO;
 import operacija.racun.KreirajRacunSO;
+import operacija.racun.PretraziRacunSO;
+import operacija.racun.PromeniRacunSO;
+import operacija.racun.UcitajJedanRacunSO;
 import operacija.strsprema.UbaciStrSpremaSO;
 
 /**
@@ -51,7 +56,13 @@ public class Controller {
         System.out.println("Klasa Controller - " + operacija.getKupci());
         return operacija.getKupci();
     }
-
+    
+    public List<Kupac> pretraziKupce(Kupac kriterijum) throws Exception {
+        PretraziKupceSO operacija = new PretraziKupceSO();
+        operacija.izvrsi(kriterijum, null);
+        return operacija.getKupci();
+    }
+    
     public void obrisiKupca(Kupac k) throws Exception {
         ObrisiKupcaSO operacija = new ObrisiKupcaSO();
         operacija.izvrsi(k, null);
@@ -93,5 +104,28 @@ public class Controller {
     public void kreirajRacun(Racun r) throws Exception {
         KreirajRacunSO operacija = new KreirajRacunSO();
         operacija.izvrsi(r, null);
+    }
+    
+    public List<Racun> pretraziRacune(Racun kriterijum) throws Exception {
+        PretraziRacunSO operacija = new PretraziRacunSO();
+        operacija.izvrsi(kriterijum, null);
+        return operacija.getRacuni();
+    }
+    
+    public void promeniRacun(Racun r) throws Exception {
+        PromeniRacunSO operacija = new PromeniRacunSO();
+        operacija.izvrsi(r, null);
+    }
+    
+    public Kupac ucitajJednogKupca(Kupac kriterijum) throws Exception {
+        UcitajJednogKupcaSO operacija = new UcitajJednogKupcaSO();
+        operacija.izvrsi(kriterijum, null);
+        return operacija.getKupac();
+    }
+    
+    public Racun ucitajJedanRacun(Racun kriterijum) throws Exception {
+        UcitajJedanRacunSO operacija = new UcitajJedanRacunSO();
+        operacija.izvrsi(kriterijum, null);
+        return operacija.getRacun();
     }
 }

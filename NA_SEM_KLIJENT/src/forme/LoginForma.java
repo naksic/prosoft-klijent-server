@@ -46,7 +46,7 @@ public class LoginForma extends javax.swing.JFrame {
 
         jLabel2.setText("Šifra");
 
-        jButton1.setText("Uloguj se");
+        jButton1.setText("Prijavi se");
 
         jPasswordField1.setText("pp0203");
 

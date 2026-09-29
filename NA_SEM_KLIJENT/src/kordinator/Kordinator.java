@@ -4,7 +4,11 @@
  */
 package kordinator;
 
+import domen.Kupac;
 import domen.Prodavac;
+import domen.Racun;
+import forme.DetaljiKupcaForma;
+import forme.DetaljiRacunaForma;
 import forme.DodajKupcaForma;
 import forme.DodajRacunForma;
 import forme.DodajStrSpremuForma;
@@ -12,14 +16,18 @@ import forme.FormaTip;
 import forme.GlavnaForma;
 import forme.LoginForma;
 import forme.PrikazKupacaForma;
+import forme.PrikazRacunaForma;
 import java.util.HashMap;
 import java.util.Map;
+import kontroleri.DetaljiKupcaController;
+import kontroleri.DetaljiRacunaController;
 import kontroleri.DodajKupcaController;
 import kontroleri.DodajRacunController;
 import kontroleri.DodajStrSpremuController;
 import kontroleri.GlavnaFormaController;
 import kontroleri.LoginController;
 import kontroleri.PrikazKupacaController;
+import kontroleri.PrikazRacunaController;
 
 
 
@@ -34,8 +42,11 @@ public class Kordinator {
     private GlavnaFormaController glavnaFormaController;
     private PrikazKupacaController prikazKupacaController;
     private DodajKupcaController dodajKupcaController;
+    private DetaljiKupcaController detaljiKupcaController;
     private DodajStrSpremuController dodajStrSpremuController;
     private DodajRacunController dodajRacunController;
+    private PrikazRacunaController prikazRacunaController;
+    private DetaljiRacunaController detaljiRacunaController;
     private Map<String, Object> parametri;
     
     private Kordinator() {
@@ -100,6 +111,30 @@ public class Kordinator {
     
     public void otvoriDodajRacunFormu() {
         dodajRacunController = new DodajRacunController(new DodajRacunForma());
-        dodajRacunController.otvoriFormu();
+        dodajRacunController.otvoriFormu(FormaTip.KREIRAJ);
+    }
+
+    public void otvoriPromeniRacunaFormu() {
+        dodajRacunController = new DodajRacunController(new DodajRacunForma());
+        dodajRacunController.otvoriFormu(FormaTip.PROMENI);
+    }
+    
+    public void otvoriPrikazRacunaFormu() {
+        prikazRacunaController = new PrikazRacunaController(new PrikazRacunaForma());
+        prikazRacunaController.otvoriFormu();
+    }
+    
+    public void osveziFormuRacuna() {
+        prikazRacunaController.osveziFormu();
+    }
+    
+    public void otvoriDetaljeKupcaFormu(Kupac k) {
+        detaljiKupcaController = new DetaljiKupcaController(new DetaljiKupcaForma());
+        detaljiKupcaController.otvoriFormu(k);
+    }
+    
+    public void otvoriDetaljeRacunaFormu(Racun r) {
+        detaljiRacunaController = new DetaljiRacunaController(new DetaljiRacunaForma());
+        detaljiRacunaController.otvoriFormu(r);
     }
 }

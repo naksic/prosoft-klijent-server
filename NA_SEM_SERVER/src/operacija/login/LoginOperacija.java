@@ -29,16 +29,14 @@ public class LoginOperacija extends ApstraktnaGenerickaOperacija {
 
     @Override
     protected void izvrsiOperaciju(Object param, String kljuc) throws Exception {
-        List<Prodavac> sviProdavci = broker.getAll((Prodavac) param, null);
-        System.out.println("KLASA: LoginOperacija - " + sviProdavci);
-        
-        if(sviProdavci.contains((Prodavac) param)) {
-            for (Prodavac p : sviProdavci) {
-                if(p.equals((Prodavac) param)) {
-                    prodavac = p;
-                    return;
-                }
-            }
+        Prodavac uneti = (Prodavac) param;
+        String uslov = " WHERE korisnickoIme = '" + uneti.getKorisnickoIme() + "'";
+
+        List<Prodavac> pronadjeni = broker.getAll(new Prodavac(), uslov);
+        System.out.println("KLASA: LoginOperacija - " + pronadjeni);
+
+        if (!pronadjeni.isEmpty() && pronadjeni.get(0).equals(uneti)) {
+            prodavac = pronadjeni.get(0);
         } else {
             prodavac = null;
         }
