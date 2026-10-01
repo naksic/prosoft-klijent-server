@@ -56,8 +56,7 @@ public class DodajStrSpremuController {
                 try {
                     Komunikacija.getInstance().ubaciStrucnuSpremu(ss);
                     JOptionPane.showMessageDialog(dssf, "Sistem je zapamtio stručnu spremu.", "Uspeh", JOptionPane.INFORMATION_MESSAGE);
-                    dssf.getjTextFieldZvanje().setText("");
-                    dssf.getjTextFieldStepen().setText("");
+                    dssf.dispose();
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(dssf, "Sistem ne može da zapamti stručnu spremu.", "Greška", JOptionPane.ERROR_MESSAGE);
                 }

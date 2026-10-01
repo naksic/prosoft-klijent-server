@@ -36,7 +36,8 @@ public class Komunikacija {
     
     public void konekcija() {
         try {
-            soket = new Socket("localhost", 9000);
+            int port = Integer.getInteger("port", 9000);
+            soket = new Socket("localhost", port);
             posiljalac = new Posiljalac(soket);
             primalac = new Primalac(soket);
         } catch (IOException ex) {
@@ -88,9 +89,8 @@ public class Komunikacija {
         
         Odgovor odg = (Odgovor) primalac.primi();
         if(odg.getOdgovor() == null) {
-            System.out.println("Uspeh");
+
         } else {
-            System.out.println("Greska");
             Exception serverGreska = (Exception) odg.getOdgovor();
             serverGreska.printStackTrace();
             throw new Exception(serverGreska.getMessage());
@@ -220,5 +220,14 @@ public class Komunikacija {
             throw new Exception(serverGreska.getMessage());
         }
         return (Racun) odgovor;
+    }
+    
+    public List<Racun> ucitajRacune() {
+        Zahtev zahtev = new Zahtev(Operacija.UCITAJ_RACUNE, null);
+        posiljalac.posalji(zahtev);
+
+        Odgovor odg = (Odgovor) primalac.primi();
+        List<Racun> racuni = (List<Racun>) odg.getOdgovor();
+        return racuni;
     }
 }

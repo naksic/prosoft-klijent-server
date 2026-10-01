@@ -24,9 +24,8 @@ public class PromeniRacunSO extends ApstraktnaGenerickaOperacija {
             throw new Exception("Sistem ne može da zapamti račun");
         }
         Racun r = (Racun) param;
-        if (r.getIdRacun() <= 0 || r.getProdavac() == null || r.getKupac() == null
-                || r.getDatumIzdavanja() == null || r.getNacinPlacanja() == null
-                || r.getStavke() == null || r.getStavke().isEmpty()) {
+        if (r.getIdRacun() <= 0 || r.getProdavac() == null || r.getKupac() == null 
+                || r.getDatumIzdavanja() == null || r.getNacinPlacanja() == null || r.getStavke() == null || r.getStavke().isEmpty()) {
             throw new Exception("Sistem ne može da zapamti račun");
         }
         for (StavkaRacuna s : r.getStavke()) {

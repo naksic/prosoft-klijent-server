@@ -76,7 +76,7 @@ public class DodajKupcaForma extends javax.swing.JFrame {
 
         jLabel5.setText("Datum rodjenja (npr. 10.10.2000)");
 
-        jButtonDodaj.setText("Dodaj");
+        jButtonDodaj.setText("Kreiraj");
 
         jLabel6.setText("Mesto");
 

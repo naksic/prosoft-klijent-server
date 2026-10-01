@@ -9,6 +9,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import konfiguracija.Konfiguracija;
 import niti.ObradaKlijentskihZahteva;
 
 /**
@@ -22,19 +23,29 @@ public class Server extends Thread {
     @Override
     public void run() {
         try {
-            serverSoket = new ServerSocket(9000);
+            serverSoket = new ServerSocket(vratiPort());
             while(!kraj) {
                 Socket s = serverSoket.accept();
                 System.out.println("Klijent povezan");
-                //
+                
                 ObradaKlijentskihZahteva okz = new ObradaKlijentskihZahteva(s);
                 okz.start();
             }
         } catch (IOException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            if (!kraj) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
         }        
     }
     
+    private int vratiPort() {
+        try {
+            return Integer.parseInt(Konfiguracija.getInstance().getProperty("port"));
+        } catch (NumberFormatException nfe) {
+            return 9000;
+        }
+    }
     
     public void zaustaviServer() {
         kraj = true;

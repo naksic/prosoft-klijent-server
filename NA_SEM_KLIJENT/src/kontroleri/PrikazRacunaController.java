@@ -70,7 +70,9 @@ public class PrikazRacunaController {
         }
         prf.getjComboBoxNacinPlacanja().setSelectedIndex(-1);
 
+        List<Racun> sviRacuni = Komunikacija.getInstance().ucitajRacune();
         ModelTabeleRacun mtr = new ModelTabeleRacun();
+        mtr.setLista(sviRacuni);
         prf.getjTableRacuni().setModel(mtr);
     }
 
@@ -137,14 +139,7 @@ public class PrikazRacunaController {
         prf.addBtnRestartujPretraguActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                prf.getjComboBoxKupac().setSelectedIndex(-1);
-                prf.getjComboBoxProdavac().setSelectedIndex(-1);
-                prf.getjComboBoxOprema().setSelectedIndex(-1);
-                prf.getjComboBoxNacinPlacanja().setSelectedIndex(-1);
-                prf.getjTextFieldDatum().setText("");
-
-                ModelTabeleRacun mtr = (ModelTabeleRacun) prf.getjTableRacuni().getModel();
-                mtr.setLista(new ArrayList<>());
+                pripremiFormu();
             }
         });
 

@@ -12,7 +12,6 @@ import domen.Racun;
 import domen.StatusStavke;
 import domen.StavkaRacuna;
 import forme.DodajRacunForma;
-import forme.FormaTip;
 import forme.model.ModelTabeleStavki;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -112,7 +111,7 @@ public class DodajRacunController {
         Racun r = (Racun) Kordinator.getInstance().vratiParam("racun");
 
         stavke = new ArrayList<>(r.getStavke());
-        stavke = new ArrayList<>(r.getStavke());
+        
         for (StavkaRacuna s : stavke) {
             s.setStatus(StatusStavke.NEPROMENJENA);
         }

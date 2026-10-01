@@ -5,28 +5,28 @@
 package operacija.kupci;
 
 import domen.Kupac;
+import java.util.List;
 import operacija.ApstraktnaGenerickaOperacija;
 
 /**
  *
  * @author Korisnik
  */
-public class UbaciKupcaSO extends ApstraktnaGenerickaOperacija {
+public class VratiListuSviKupacSO extends ApstraktnaGenerickaOperacija {
+    List<Kupac> kupci;
 
+    public List<Kupac> getKupci() {
+        return kupci;
+    }
+    
     @Override
     protected void preduslovi(Object param) throws Exception {
-        if (param == null || !(param instanceof Kupac)) {
-            throw new Exception("Sistem ne može da kreira kupca");
-        }
+        
     }
 
     @Override
     protected void izvrsiOperaciju(Object param, String kljuc) throws Exception {
-        try {
-            broker.add((Kupac) param);
-        } catch (java.sql.SQLIntegrityConstraintViolationException e) {
-            throw new Exception("Sistem ne može da zapamti kupca. Razlog: broj loyalty kartice već postoji.");
-        }
+        kupci = broker.getAll(new Kupac(), " JOIN mesto ON kupac.mesto = mesto.idMesto ORDER BY idKupca ASC");
     }
     
 }

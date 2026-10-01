@@ -62,7 +62,10 @@ public class PrikazKupacaController {
                     ModelTabeleKupac mtk = (ModelTabeleKupac) pkf.getjTableKupci().getModel();
                     Kupac k = mtk.getLista().get(red);
                     try {
-                        Komunikacija.getInstance().obrisiKupca(k);
+                        Kupac pronadjenKupac = Komunikacija.getInstance().ucitajJednogKupca(k);
+                        JOptionPane.showMessageDialog(pkf, "Sistem je našao kupca.", "Uspeh", JOptionPane.INFORMATION_MESSAGE);
+
+                        Komunikacija.getInstance().obrisiKupca(pronadjenKupac);
                         JOptionPane.showMessageDialog(pkf, "Sistem je obrisao kupca.", "Uspeh", JOptionPane.INFORMATION_MESSAGE);
                         pripremiFormu();
                     } catch(Exception ex) {
@@ -70,7 +73,8 @@ public class PrikazKupacaController {
                         if (poruka == null || poruka.isEmpty()) {
                             poruka = "Sistem ne može da obriše kupca.";
                         }
-                        JOptionPane.showMessageDialog(pkf, poruka, "Greška", JOptionPane.ERROR_MESSAGE);                    }
+                        JOptionPane.showMessageDialog(pkf, poruka, "Greška", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         });
@@ -78,16 +82,24 @@ public class PrikazKupacaController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int red = pkf.getjTableKupci().getSelectedRow();
-                if(red != -1) {
-                    ModelTabeleKupac mtk = (ModelTabeleKupac) pkf.getjTableKupci().getModel();
-                    Kupac k = mtk.getLista().get(red);
-                    JOptionPane.showMessageDialog(pkf, "Sistem je našao kupca.", "Uspeh", JOptionPane.INFORMATION_MESSAGE);
-                    
-                    Kordinator.getInstance().dodajParam("kupac", k);
-                    Kordinator.getInstance().otvoriPromeniKupcaFormu();
-                            
-                } else {
+                if (red == -1) {
                     JOptionPane.showMessageDialog(pkf, "Sistem ne može da nađe kupca.", "Greška", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                ModelTabeleKupac mtk = (ModelTabeleKupac) pkf.getjTableKupci().getModel();
+                Kupac k = mtk.getLista().get(red);
+
+                try {
+                    Kupac pronadjenKupac = Komunikacija.getInstance().ucitajJednogKupca(k);
+                    JOptionPane.showMessageDialog(pkf, "Sistem je našao kupca.", "Uspeh", JOptionPane.INFORMATION_MESSAGE);
+                    Kordinator.getInstance().dodajParam("kupac", pronadjenKupac);
+                    Kordinator.getInstance().otvoriPromeniKupcaFormu();
+                } catch (Exception ex) {
+                    String poruka = ex.getMessage();
+                    if (poruka == null || poruka.isEmpty()) {
+                        poruka = "Sistem ne može da nađe kupca.";
+                    }
+                    JOptionPane.showMessageDialog(pkf, poruka, "Greška", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });

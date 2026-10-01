@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package operacija.kupci;
+package operacija.mesto;
 
-import domen.Kupac;
+import domen.Mesto;
 import java.util.List;
 import operacija.ApstraktnaGenerickaOperacija;
 
@@ -12,12 +12,8 @@ import operacija.ApstraktnaGenerickaOperacija;
  *
  * @author Korisnik
  */
-public class UcitajKupceSO extends ApstraktnaGenerickaOperacija {
-    List<Kupac> kupci;
-
-    public List<Kupac> getKupci() {
-        return kupci;
-    }
+public class VratiListuSviMestoSO extends ApstraktnaGenerickaOperacija {
+    List<Mesto> listaMesta;
     
     @Override
     protected void preduslovi(Object param) throws Exception {
@@ -26,7 +22,16 @@ public class UcitajKupceSO extends ApstraktnaGenerickaOperacija {
 
     @Override
     protected void izvrsiOperaciju(Object param, String kljuc) throws Exception {
-        kupci = broker.getAll(new Kupac(), " JOIN mesto ON kupac.mesto = mesto.idMesto ORDER BY idKupca ASC");
+        listaMesta = broker.getAll(new Mesto(), null);
     }
+
+    public List<Mesto> getListaMesta() {
+        return listaMesta;
+    }
+
+    public void setListaMesta(List<Mesto> listaMesta) {
+        this.listaMesta = listaMesta;
+    }
+    
     
 }

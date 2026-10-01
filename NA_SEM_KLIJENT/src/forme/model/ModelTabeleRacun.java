@@ -50,7 +50,7 @@ public class ModelTabeleRacun extends AbstractTableModel {
         Racun r = lista.get(rowIndex);
         switch (columnIndex) {
             case 0:
-                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd.MM.yyyy");
+                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd.MM.yyyy.");
                 return sdf.format(r.getDatumIzdavanja());
             case 1:
                 return r.getKupac().getIme() + " " + r.getKupac().getPrezime();

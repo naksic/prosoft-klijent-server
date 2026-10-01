@@ -13,7 +13,7 @@ import operacija.ApstraktnaGenerickaOperacija;
  *
  * @author Korisnik
  */
-public class LoginOperacija extends ApstraktnaGenerickaOperacija {
+public class PrijaviProdavacSO extends ApstraktnaGenerickaOperacija {
 
     Prodavac prodavac;
 
@@ -33,7 +33,6 @@ public class LoginOperacija extends ApstraktnaGenerickaOperacija {
         String uslov = " WHERE korisnickoIme = '" + uneti.getKorisnickoIme() + "'";
 
         List<Prodavac> pronadjeni = broker.getAll(new Prodavac(), uslov);
-        System.out.println("KLASA: LoginOperacija - " + pronadjeni);
 
         if (!pronadjeni.isEmpty() && pronadjeni.get(0).equals(uneti)) {
             prodavac = pronadjeni.get(0);

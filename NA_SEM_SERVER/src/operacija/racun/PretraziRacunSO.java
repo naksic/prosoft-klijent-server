@@ -46,7 +46,7 @@ public class PretraziRacunSO extends ApstraktnaGenerickaOperacija {
             uslov.append(" AND racun.datumIzdavanja = '").append(sdf.format(kriterijum.getDatumIzdavanja())).append("'");
         }
         if (kriterijum.getNacinPlacanja() != null) {
-            uslov.append(" AND racun.nacinPlacanja = '").append(kriterijum.getNacinPlacanja()).append("'");
+            uslov.append(" AND racun.nacinPlacanja = '").append(kriterijum.getNacinPlacanja().name()).append("'");
         }
         if (kriterijum.getProdavac() != null) {
             uslov.append(" AND racun.prodavac = ").append(kriterijum.getProdavac().getIdProdavac());
@@ -54,11 +54,9 @@ public class PretraziRacunSO extends ApstraktnaGenerickaOperacija {
         if (kriterijum.getKupac() != null) {
             uslov.append(" AND racun.kupac = ").append(kriterijum.getKupac().getIdKupca());
         }
-        if (kriterijum.getStavke() != null && !kriterijum.getStavke().isEmpty()
-                && kriterijum.getStavke().get(0).getOprema() != null) {
+        if (kriterijum.getStavke() != null && !kriterijum.getStavke().isEmpty() && kriterijum.getStavke().get(0).getOprema() != null) {
             int idOpreme = kriterijum.getStavke().get(0).getOprema().getIdOpreme();
-            uslov.append(" AND racun.idRacun IN (SELECT stavkaracuna.racun FROM stavkaracuna WHERE stavkaracuna.oprema = ")
-                 .append(idOpreme).append(")");
+            uslov.append(" AND racun.idRacun IN (SELECT stavkaracuna.racun FROM stavkaracuna WHERE stavkaracuna.oprema = ").append(idOpreme).append(")");
         }
 
         uslov.append(" ORDER BY racun.idRacun ASC");

@@ -14,17 +14,18 @@ import java.util.List;
 import operacija.kupci.ObrisiKupcaSO;
 import operacija.kupci.PretraziKupceSO;
 import operacija.kupci.PromeniKupcaSO;
-import operacija.kupci.UbaciKupcaSO;
+import operacija.kupci.KreirajKupcaSO;
 import operacija.kupci.UcitajJednogKupcaSO;
-import operacija.kupci.UcitajKupceSO;
-import operacija.login.LoginOperacija;
-import operacija.mesto.UcitajMestaSO;
-import operacija.oprema.UcitajOpremuSO;
-import operacija.prodavac.UcitajProdavceSO;
+import operacija.kupci.VratiListuSviKupacSO;
+import operacija.login.PrijaviProdavacSO;
+import operacija.mesto.VratiListuSviMestoSO;
+import operacija.oprema.VratiListuSviOpremaSO;
+import operacija.prodavac.VratiListuSviProdavacSO;
 import operacija.racun.KreirajRacunSO;
 import operacija.racun.PretraziRacunSO;
 import operacija.racun.PromeniRacunSO;
 import operacija.racun.UcitajJedanRacunSO;
+import operacija.racun.UcitajRacuneSO;
 import operacija.strsprema.UbaciStrSpremaSO;
 
 /**
@@ -44,16 +45,14 @@ public class Controller {
     }
 
     public Prodavac login(Prodavac p) throws Exception {
-        LoginOperacija operacija = new LoginOperacija();
+        PrijaviProdavacSO operacija = new PrijaviProdavacSO();
         operacija.izvrsi(p, null);
-        System.out.println("KLASA Controller - " + operacija.getProdavac());
         return operacija.getProdavac();
     }
 
     public List<Kupac> ucitajKupce() throws Exception {
-        UcitajKupceSO operacija = new UcitajKupceSO();
+        VratiListuSviKupacSO operacija = new VratiListuSviKupacSO();
         operacija.izvrsi(null, null);
-        System.out.println("Klasa Controller - " + operacija.getKupci());
         return operacija.getKupci();
     }
     
@@ -69,13 +68,13 @@ public class Controller {
     }
 
     public List<Mesto> ucitajMesta() throws Exception {
-        UcitajMestaSO operacija = new UcitajMestaSO();
+        VratiListuSviMestoSO operacija = new VratiListuSviMestoSO();
         operacija.izvrsi(null, null);
         return operacija.getListaMesta();
     }
 
     public void ubaciKupca(Kupac kupacSaForme) throws Exception {
-        UbaciKupcaSO operacija = new UbaciKupcaSO();
+        KreirajKupcaSO operacija = new KreirajKupcaSO();
         operacija.izvrsi(kupacSaForme, null);
     }
 
@@ -90,13 +89,13 @@ public class Controller {
     }
     
     public List<Prodavac> ucitajProdavce() throws Exception {
-        UcitajProdavceSO operacija = new UcitajProdavceSO();
+        VratiListuSviProdavacSO operacija = new VratiListuSviProdavacSO();
         operacija.izvrsi(null, null);
         return operacija.getListaProdavaca();
     }
 
     public List<Oprema> ucitajOpremu() throws Exception {
-        UcitajOpremuSO operacija = new UcitajOpremuSO();
+        VratiListuSviOpremaSO operacija = new VratiListuSviOpremaSO();
         operacija.izvrsi(null, null);
         return operacija.getListaOpreme();
     }
@@ -127,5 +126,11 @@ public class Controller {
         UcitajJedanRacunSO operacija = new UcitajJedanRacunSO();
         operacija.izvrsi(kriterijum, null);
         return operacija.getRacun();
+    }
+    
+    public List<Racun> ucitajRacune() throws Exception {
+        UcitajRacuneSO operacija = new UcitajRacuneSO();
+        operacija.izvrsi(null, null);
+        return operacija.getRacuni();
     }
 }

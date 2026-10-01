@@ -10,4 +10,12 @@ package domen;
  */
 public enum NacinPlacanja {
     KES, KARTICA;
+    
+    @Override
+    public String toString() {
+        if (this == KES) {
+            return "KEŠ";
+        }
+        return name();
+    }
 }

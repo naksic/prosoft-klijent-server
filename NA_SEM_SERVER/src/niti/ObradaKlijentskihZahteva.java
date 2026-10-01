@@ -42,6 +42,15 @@ public class ObradaKlijentskihZahteva extends Thread {
         while(true) {
             try {
                 Zahtev zahtev = (Zahtev) primalac.primi();
+                
+                if (zahtev == null) {
+                    try {
+                        socket.close();
+                    } catch (Exception ignore) {
+                    }
+                    return;
+                }
+                
                 Odgovor odgovor = new Odgovor();
 
                 try {
@@ -116,6 +125,10 @@ public class ObradaKlijentskihZahteva extends Thread {
                             Racun racunZaDetalje = (Racun) zahtev.getParametar();
                             Racun pronadjenRacun = Controller.getInstance().ucitajJedanRacun(racunZaDetalje);
                             odgovor.setOdgovor(pronadjenRacun);
+                            break;
+                        case UCITAJ_RACUNE:
+                            List<Racun> sviRacuni = Controller.getInstance().ucitajRacune();
+                            odgovor.setOdgovor(sviRacuni);
                             break;
                         default:
                             System.out.println("GREŠKA, OPERACIJA NE POSTOJI");

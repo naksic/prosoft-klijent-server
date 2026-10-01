@@ -25,5 +25,6 @@ public enum Operacija implements Serializable {
     PRETRAZI_RACUN,
     PROMENI_RACUN,
     UCITAJ_JEDNOG_KUPCA,
-    UCITAJ_JEDAN_RACUN
+    UCITAJ_JEDAN_RACUN,
+    UCITAJ_RACUNE
 }

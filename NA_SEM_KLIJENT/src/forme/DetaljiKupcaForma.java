@@ -92,7 +92,7 @@ public class DetaljiKupcaForma extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     public void popuniPodatke(domen.Kupac k) {
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd.MM.yyyy");
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd.MM.yyyy.");
         jLabelIme.setText("Ime: " + k.getIme());
         jLabelPrezime.setText("Prezime: " + k.getPrezime());
         jLabelBrojLK.setText("Broj Loyalty Kartice: " + (k.getBrojLoyaltyKartice() == null ? "-" : k.getBrojLoyaltyKartice()));

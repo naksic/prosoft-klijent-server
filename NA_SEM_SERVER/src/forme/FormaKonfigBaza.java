@@ -105,6 +105,11 @@ public class FormaKonfigBaza extends javax.swing.JDialog {
         String username = jTextFieldUsername.getText().trim();
         String password = String.valueOf(jPasswordFieldPassword.getPassword());
         
+        if(url.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Morate uneti URL.", "Greška", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         if(username.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Morate uneti username.", "Greška", JOptionPane.ERROR_MESSAGE);
             return;

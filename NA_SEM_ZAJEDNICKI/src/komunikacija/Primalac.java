@@ -25,6 +25,7 @@ public class Primalac {
         try {
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             return in.readObject();
+        } catch (java.io.EOFException | java.net.SocketException ex) {
         } catch (Exception ex) {
             ex.printStackTrace();
         }

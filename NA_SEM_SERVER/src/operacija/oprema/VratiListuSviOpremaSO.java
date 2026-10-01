@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package operacija.prodavac;
+package operacija.oprema;
 
-import domen.Prodavac;
+import domen.Oprema;
 import java.util.List;
 import operacija.ApstraktnaGenerickaOperacija;
 
@@ -12,13 +12,13 @@ import operacija.ApstraktnaGenerickaOperacija;
  *
  * @author Korisnik
  */
-public class UcitajProdavceSO extends ApstraktnaGenerickaOperacija {
-    List<Prodavac> listaProdavaca;
+public class VratiListuSviOpremaSO extends ApstraktnaGenerickaOperacija {
+    List<Oprema> listaOpreme;
 
-    public List<Prodavac> getListaProdavaca() {
-        return listaProdavaca;
+    public List<Oprema> getListaOpreme() {
+        return listaOpreme;
     }
-    
+
     @Override
     protected void preduslovi(Object param) throws Exception {
         
@@ -26,7 +26,6 @@ public class UcitajProdavceSO extends ApstraktnaGenerickaOperacija {
 
     @Override
     protected void izvrsiOperaciju(Object param, String kljuc) throws Exception {
-        listaProdavaca = broker.getAll(new Prodavac(), null);
+        listaOpreme = broker.getAll(new Oprema(), null);
     }
-    
 }

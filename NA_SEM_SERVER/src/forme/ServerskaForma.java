@@ -132,6 +132,7 @@ public class ServerskaForma extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jButtonPokreniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPokreniActionPerformed
+        server = new Server();
         server.start();
         jLabelStatus.setText("SERVER JE POKRENUT");
         jButtonZaustavi.setEnabled(true);

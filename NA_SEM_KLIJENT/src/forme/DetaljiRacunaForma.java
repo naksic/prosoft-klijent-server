@@ -119,7 +119,7 @@ public class DetaljiRacunaForma extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     public void popuniPodatke(domen.Racun r) {
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd.MM.yyyy");
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd.MM.yyyy.");
         jLabelDatumIzdavanja.setText("Datum izdavanja: " + (r.getDatumIzdavanja() == null ? "-" : sdf.format(r.getDatumIzdavanja())));
         jLabelKupac.setText("Kupac: " + r.getKupac().getIme() + " " + r.getKupac().getPrezime());
         jLabelProdavac.setText("Prodavac: " + r.getProdavac().getIme() + " " + r.getProdavac().getPrezime());

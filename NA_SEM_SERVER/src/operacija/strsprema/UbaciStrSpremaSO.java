@@ -16,7 +16,11 @@ public class UbaciStrSpremaSO extends ApstraktnaGenerickaOperacija {
     @Override
     protected void preduslovi(Object param) throws Exception {
         if (param == null || !(param instanceof StrSprema)) {
-            throw new Exception("Sistem ne može da zapamti stručnu spremu");
+            throw new Exception("Sistem ne može da zapamti stručnu spremu.");
+        }
+        StrSprema ss = (StrSprema) param;
+        if (ss.getZvanje() == null || ss.getZvanje().trim().isEmpty() || ss.getStepen() <= 0) {
+            throw new Exception("Sistem ne može da zapamti stručnu spremu.");
         }
     }
 

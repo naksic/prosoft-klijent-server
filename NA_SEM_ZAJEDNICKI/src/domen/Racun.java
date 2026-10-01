@@ -207,7 +207,7 @@ public class Racun implements ApstraktniDomenskiObjekat {
     @Override
     public String vratiVrednostZaUbacivanje() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        return "'" + sdf.format(datumIzdavanja) + "','" + nacinPlacanja + "','" + napomena + "'," + popust + "," + ukupanIznos + "," + prodavac.getIdProdavac()+ "," + kupac.getIdKupca();
+        return "'" + sdf.format(datumIzdavanja) + "','" + nacinPlacanja.name() + "','" + napomena + "'," + popust + "," + ukupanIznos + "," + prodavac.getIdProdavac()+ "," + kupac.getIdKupca();
     }
 
     @Override
@@ -223,7 +223,7 @@ public class Racun implements ApstraktniDomenskiObjekat {
     @Override
     public String vratiVrednostZaIzmenu() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        return "datumIzdavanja = '" + sdf.format(datumIzdavanja) + "', nacinPlacanja = '" + nacinPlacanja
+        return "datumIzdavanja = '" + sdf.format(datumIzdavanja) + "', nacinPlacanja = '" + nacinPlacanja.name()
                 + "', napomena = '" + napomena + "', popust = " + popust + ", ukupanIznos = " + ukupanIznos
                 + ", prodavac = " + prodavac.getIdProdavac() + ", kupac = " + kupac.getIdKupca();
     }
